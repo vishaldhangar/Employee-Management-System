@@ -14,6 +14,10 @@ import View from './components/employee/View';
 import EditEmployee from './components/employee/EditEmployee';
 import AddSalary from './components/Salary/AddSalary';
 import ViewPage from './components/Salary/ViewPage';
+import Summary from './components/EmployeeDashboard/Summary';
+import LeaveList from './components/leave/List';
+import AddLeave from './components/leave/AddLeave';
+import Setting from './components/EmployeeDashboard/Setting';
 function App() {
   
 
@@ -42,7 +46,25 @@ function App() {
 
           <Route path="/admin-dashboard/salary/add" element={<AddSalary />}></Route>
           </Route> 
-         <Route path="/employee-dashboard" element={<EmployeeDashboard />}></Route> 
+         <Route path="/employee-dashboard" element={
+          <PrivateRoutes>
+            <RoleBasedRoutes requiredRole={['admin','employee']}>
+          <EmployeeDashboard />
+          </RoleBasedRoutes>
+          </PrivateRoutes>
+          }>
+
+
+
+<Route index element={<Summary />}></Route>
+
+<Route path="/employee-dashboard/profile/:id" element={<View />}></Route>
+<Route path="/employee-dashboard/leaves" element={<LeaveList />}></Route>
+<Route path="/employee-dashboard/add-leave" element={<AddLeave />}></Route>
+<Route path="/employee-dashboard/salary/:id" element={<ViewPage />}></Route>
+<Route path="/employee-dashboard/setting" element={<Setting />}></Route>
+
+          </Route> 
       </Routes>
     </BrowserRouter>  
   )

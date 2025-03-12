@@ -41,6 +41,13 @@ const AdminSidebar = () => {
           <FaDollarSign className="text-xl" />
           <span>Salary</span>
         </NavLink>
+        <NavLink 
+          to="/admin-dashboard"
+          className="flex items-center space-x-3 text-lg hover:bg-gray-700 p-2 rounded-lg"
+        >
+          <FaDollarSign className="text-xl" />
+          <span>Leaves</span>
+        </NavLink>
         
         <NavLink 
           to="/admin-dashboard"
