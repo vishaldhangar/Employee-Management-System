@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 
 
 
+
 const addLeave = async (req, res) => {
     try {
         // console.log("Received request body:", req.body); // ✅ Log request data
@@ -47,7 +48,7 @@ const addLeave = async (req, res) => {
 
 
 
-const getLeaves=async(req,res)=>{
+const getLeave=async(req,res)=>{
     try{
          const {id}=req.params;
          const employee=await Employee.findOne({userId: id})
@@ -60,4 +61,22 @@ const getLeaves=async(req,res)=>{
     }
 }
 
-export { addLeave , getLeaves};
+const getLeaves=async(req,res)=>{
+    try{ const leaves = await Leave.find().populate({
+        path: "employeeId",
+        select: "userId department _id",  // ✅ Ensure employeeId is included
+        populate: [
+          { path: "department", select: "dep_name" },
+          { path: "userId", select: "name" },
+        ],
+      });
+      
+         
+        return res.status(200).json({success:true,leaves})
+   }catch (error) {
+       console.error("Error adding leave:", error);
+       return res.status(500).json({ success: false, error: "Internal Server Error" });
+   }
+}
+
+export { addLeave , getLeave,getLeaves};
