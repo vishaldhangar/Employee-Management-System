@@ -50,7 +50,7 @@ const AdminSidebar = () => {
         </NavLink>
         
         <NavLink 
-          to="/admin-dashboard"
+          to="/admin-dashboard/setting"
           className="flex items-center space-x-3 text-lg hover:bg-gray-700 p-2 rounded-lg"
         >
           <FaCog className="text-xl" />

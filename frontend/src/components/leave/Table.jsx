@@ -71,8 +71,11 @@ const Table = () => {
                 </button>
               </div>
             </div>
-  
+              
+              <div className="mt-3">
+              
             <DataTable columns={columns} data={leaves} pagination />
+            </div>
           </div>
         ) : 
           <div>Loading...</div>

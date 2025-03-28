@@ -12,7 +12,7 @@ const storage=multer.diskStorage({
         cb(null,"public/uploads")
     },
     filename:(req,file,cb)=>{
-        cb(null,Date.now()+path.extname(file.originalname))
+        cb(null,Date.now()+ path.extname(file.originalname))
     }
 })
 
@@ -20,6 +20,8 @@ const upload=multer({storage:storage})
 
 
 const addEmployee=async(req,res)=>{
+    console.log(req.file);
+
     try{
 
     const {
@@ -158,4 +160,19 @@ const fetchEmployeesByDepId=async(req,res)=>{
       }
 }
 
-export {addEmployee,upload,getEmployees,getEmployee,updateEmployee,fetchEmployeesByDepId}
+
+const deleteEmp = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteEmp = await Employee.findByIdAndDelete(id);
+    if (!deleteEmp) {
+      return res.status(404).json({ success: false, error: "Employee not found" });
+    }
+    res.status(200).json({ success: true, deleteEmp });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+
+export {addEmployee,upload,getEmployees,getEmployee,updateEmployee,fetchEmployeesByDepId,deleteEmp}

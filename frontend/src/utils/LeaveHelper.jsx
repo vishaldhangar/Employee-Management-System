@@ -49,7 +49,7 @@ export const LeaveButtons = ({ id }) => {  // ✅ Fixed prop name
   const navigate = useNavigate();
 
   const handleView = (id) => {
-    navigate(`/admin-dashboard/leave/${id}`);
+    navigate(`/admin-dashboard/leaves/${id}`);
   };
 
   return (
