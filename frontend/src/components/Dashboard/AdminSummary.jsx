@@ -1,5 +1,7 @@
 import React, { useState,useEffect } from 'react'
+import toast from 'react-hot-toast'
 import SummaryCard from './SummaryCard'
+import LoadingSpinner from '../ui/LoadingSpinner'
 import { FaBuilding, FaCheckCircle, FaFileAlt, FaHourglassHalf, FaMoneyBillWave, FaTimesCircle, FaUsers } from 'react-icons/fa'
 import axios from 'axios'
 const AdminSummary = () => {
@@ -16,10 +18,8 @@ const AdminSummary = () => {
             })
             setSummary(summary.data)
        }catch(error){
-             if(error.response)
-              alert(error.response.data.error)
-
-             console.log(error.message)
+             const errorMessage = error.response?.data?.error || 'Failed to load dashboard data';
+             toast.error(errorMessage);
        }    
 
     } 
@@ -27,7 +27,11 @@ const AdminSummary = () => {
   },[])
 
   if(!summary)
-    return <div>Loading...</div>
+    return (
+      <div className="p-6 flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    )
 
 
 

@@ -1,13 +1,17 @@
 import {useState}from 'react';
 import axios from "axios";
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/authContext';
 import { useNavigate } from 'react-router-dom';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
 
 const Login = () => {
 
     // to store the data mentioned in the email and passwrd input fields
      const[email,setEmail]=useState("")
      const [password,setPassword]=useState("")
+     const [loading, setLoading] = useState(false)
 
      const{login}=useAuth()
      const navigate=useNavigate()
@@ -15,6 +19,8 @@ const Login = () => {
      // after submiting the data in login form
      const handleSubmit=async(e)=>{
         e.preventDefault();
+        setLoading(true)
+        
         try{
              const response=await axios.post(
                 "http://localhost:5000/api/auth/login",{email,password}
@@ -22,6 +28,7 @@ const Login = () => {
              if(response.data.success){
                 login(response.data.user)
                 localStorage.setItem("token",response.data.token)
+                toast.success('Login successful!')
                 if(response.data.user.role=="admin"){
                    navigate('/admin-dashboard')
                 }else{
@@ -29,7 +36,10 @@ const Login = () => {
                 }
              }
         } catch(error){
-            console.log(error);
+            const errorMessage = error.response?.data?.error || 'Login failed. Please try again.';
+            toast.error(errorMessage);
+        } finally {
+            setLoading(false)
         }
      };
 
@@ -46,38 +56,24 @@ const Login = () => {
           
 
           {/* Email Input */}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-600"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              
-              placeholder="Enter Email"
-              className="w-full mt-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              onChange={(e)=> setEmail(e.target.value)}
-            />
-          </div>
+          <Input
+            type="email"
+            label="Email"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e)=> setEmail(e.target.value)}
+            required
+          />
 
           {/* Password Input */}
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-600"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="******"
-              className="w-full mt-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              onChange={(e)=> setPassword(e.target.value)}
-            />
-          </div>
+          <Input
+            type="password"
+            label="Password"
+            placeholder="******"
+            value={password}
+            onChange={(e)=> setPassword(e.target.value)}
+            required
+          />
 
           {/* Remember Me and Forgot Password */}
           <div className="flex items-center justify-between">
@@ -97,12 +93,14 @@ const Login = () => {
           </div>
 
           {/* Login Button */}
-          <button
+          <Button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-md shadow-lg focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:outline-none"
+            className="w-full"
+            loading={loading}
+            disabled={!email || !password}
           >
-            Login
-          </button>
+            {loading ? 'Signing In...' : 'Login'}
+          </Button>
         </form>
 
        

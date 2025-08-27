@@ -8,10 +8,10 @@ const employeeSchema = new Schema({
    employeeId:{type:String,required:true,unique:true},
    dob:{type:Date},
    gender:{type:String},
-   martialStatus:{type:String},
+   maritalStatus:{type:String},
    designation:{type:String},
    department:{type:Schema.Types.ObjectId,ref:"Department",required:true},
-   salary:{type:Date,default:Date.now},
+   salary:{type:Number},
    createAt:{type:Date,default:Date.now},
    updatedAt:{type:Date,default:Date.now},
 

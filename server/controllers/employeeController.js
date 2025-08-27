@@ -1,33 +1,39 @@
 import multer from "multer";
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
-import cloudinary from "../lib/cloudinary.js";  // make sure path is correct
-
+import cloudinary from "../lib/cloudinary.js";
 import Employee from "../models/Employee.js"
 import User from "../models/user.js"
 import bcrypt from 'bcrypt'
 import path from "path"
 import Department from "../models/Department.js"
 
-
-
-// using  multer to store the profile image to upload folder
-
+// Cloudinary storage configuration
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'employee_profiles',
-    allowed_formats: ['jpg', 'jpeg', 'png'],
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
     public_id: (req, file) => Date.now() + '-' + file.originalname.split('.')[0],
+    transformation: [
+      { width: 400, height: 400, crop: 'fill', gravity: 'face' }
+    ]
   },
 });
 
-
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  }
+});
 
 
 
 const addEmployee=async(req,res)=>{
-    console.log(req.file);
+    console.log("=== ADD EMPLOYEE REQUEST ===");
+    console.log("File:", req.file);
+    console.log("Body:", req.body);
+    console.log("Headers:", req.headers);
 
     try{
 
@@ -37,7 +43,7 @@ const addEmployee=async(req,res)=>{
             employeeId,
             dob,
             gender,
-            martialStatus,
+            maritalStatus,
             designation,
             department,
             salary,
@@ -46,7 +52,10 @@ const addEmployee=async(req,res)=>{
            
 } =req.body;
 
-
+// Validate required fields
+if (!name || !email || !employeeId || !password || !role || !department) {
+    return res.status(400).json({success:false,error:"Missing required fields"});
+}
 
 const user=await User.findOne({email})
 // if user already exists
@@ -65,18 +74,36 @@ const newUser=new User({
     password:hashpsswrd,
     role,
     profileImage: req.file ? req.file.path : ""
-    // if imge is there then its data will store in database
+    // Cloudinary provides the full URL in req.file.path
 })
+
+console.log("Creating user with data:", {
+    name,
+    email,
+    role,
+    profileImage: req.file ? req.file.path : "no image"
+});
  
 const savedUser=await newUser.save()
  
 // filling other details of employee
+console.log("Creating employee with data:", {
+    userId:savedUser._id,
+    employeeId,
+    dob,
+    gender,
+    maritalStatus,
+    designation,
+    department,
+    salary,
+});
+
 const newEmployee=new Employee({
     userId:savedUser._id,
     employeeId,
     dob,
     gender,
-    martialStatus,
+    maritalStatus,
     designation,
     department,
     salary,
@@ -87,7 +114,13 @@ const newEmployee=new Employee({
 await newEmployee.save();
 return res.status(200).json({success:true,message:"employee created"})
     }catch(error){
-         return res.status(500).json({success:false,error:"server error in adding employee"})
+         console.error("Error in addEmployee:", error);
+         console.error("Error stack:", error.stack);
+         return res.status(500).json({
+             success: false,
+             error: error.message || "server error in adding employee",
+             details: error.toString()
+         })
     }
 
 }
@@ -122,7 +155,7 @@ const updateEmployee = async (req, res)=>{
     const {id}=req.params;
     const {
         name,
-        martialStatus,
+        maritalStatus,
         designation,
         department,
         salary,
@@ -144,7 +177,7 @@ const updateEmployee = async (req, res)=>{
        
      const updateUser=await User.findByIdAndUpdate({_id:employee.userId},{name})
      const updateEmployee=await Employee.findByIdAndUpdate({_id:id},{
-        martialStatus,
+        maritalStatus,
         designation,salary,department
      })
 
