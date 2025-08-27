@@ -222,17 +222,17 @@ const Add = () => {
         </select>
         </div>
 
-        <div>
+        {/* <div>
             <label className='block text-sm font-medium text-gray-700' >Profile Photo</label>
       
-        <input
+        {/* <input
           type="file"
           name="image"
           onChange={handleChange}
           className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
         //   onChange={handleChange}
         />
-        </div>
+        </div> */} 
 
         {/* Submit Button */}
         <button

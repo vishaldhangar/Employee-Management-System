@@ -59,7 +59,7 @@ const Table = () => {
                 placeholder="Search by Leave Type"
                 className="px-4 py-0.5 border-2"
               />
-              <div className="flex space-x-3">
+              {/* <div className="flex space-x-3">
                 <button className="px-4 py-2 text-white bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-md transition">
                   Pending
                 </button>
@@ -69,7 +69,7 @@ const Table = () => {
                 <button className="px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg shadow-md transition">
                   Rejected
                 </button>
-              </div>
+              </div> */}
             </div>
               
               <div className="mt-3">

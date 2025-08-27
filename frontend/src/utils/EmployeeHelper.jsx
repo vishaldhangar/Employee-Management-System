@@ -17,11 +17,11 @@
     sortable:true,
      width:'130px'
   },
-  { 
-    name: "Image", 
-    selector: (row) => row.profileImage,
-     width:'100px'
-   },
+  // { 
+  //   name: "Image", 
+  //   selector: (row) => row.profileImage,
+  //    width:'100px'
+  //  },
   { 
     name: "Department", 
     selector: (row) => row.dep_name ,
@@ -113,7 +113,7 @@
           if (confirm) {
             try {
               const response = await axios.delete(
-                `http://localhost:5000/api/employee/department/${id}`,
+                `http://localhost:5000/api/employee/${id}`,
                 {
                   headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -157,12 +157,12 @@
              Salary
             </button>
             
-            <button
+            {/* <button
               className="px-3 py-1 bg-red-900 text-white"
              
             >
              Leave
-            </button>
+            </button> */}
 
             <button
         className="px-3 py-1 bg-red-600 text-white"

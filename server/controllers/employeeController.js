@@ -1,22 +1,29 @@
-import multer from "multer"
+import multer from "multer";
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import cloudinary from "../lib/cloudinary.js";  // make sure path is correct
+
 import Employee from "../models/Employee.js"
 import User from "../models/user.js"
 import bcrypt from 'bcrypt'
 import path from "path"
 import Department from "../models/Department.js"
 
+
+
 // using  multer to store the profile image to upload folder
 
-const storage=multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null,"public/uploads")
-    },
-    filename:(req,file,cb)=>{
-        cb(null,Date.now()+ path.extname(file.originalname))
-    }
-})
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'employee_profiles',
+    allowed_formats: ['jpg', 'jpeg', 'png'],
+    public_id: (req, file) => Date.now() + '-' + file.originalname.split('.')[0],
+  },
+});
 
-const upload=multer({storage:storage})
+
+const upload = multer({ storage: storage });
+
 
 
 const addEmployee=async(req,res)=>{
@@ -36,6 +43,7 @@ const addEmployee=async(req,res)=>{
             salary,
             password,
             role,
+           
 } =req.body;
 
 
@@ -56,7 +64,8 @@ const newUser=new User({
     email,
     password:hashpsswrd,
     role,
-    profileImage:req.file ? req.file.filename : ""    // if imge is there then its data will store in database
+    profileImage: req.file ? req.file.path : ""
+    // if imge is there then its data will store in database
 })
  
 const savedUser=await newUser.save()
@@ -70,7 +79,9 @@ const newEmployee=new Employee({
     martialStatus,
     designation,
     department,
-    salary
+    salary,
+
+    
 })
 
 await newEmployee.save();

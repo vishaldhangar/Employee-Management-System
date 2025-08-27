@@ -6,12 +6,12 @@ export const columns = [
     selector: (row) => row.sno,
     width: "70px",
   },
-  { 
-    name: "Emp ID", 
-    selector: (row) => row.employeeId,
-    sortable: true,
-    width: "130px",
-  },
+  // { 
+  //   name: "Emp ID", 
+  //   selector: (row) => row.employeeId,
+  //   sortable: true,
+  //   width: "130px",
+  // },
   { 
     name: "Name", 
     selector: (row) => row.name,
@@ -38,11 +38,11 @@ export const columns = [
     selector: (row) => row.status,
     width: "120px",
   },
-  { 
-    name: "Action",
-    selector:(row)=>row.action,
-    width:"120px",
-  },
+  // { 
+  //   name: "Action",
+  //   selector:(row)=>row.action,
+  //   width:"120px",
+  // },
 ];
 
 export const LeaveButtons = ({ id }) => {  // ✅ Fixed prop name
